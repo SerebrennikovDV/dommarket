@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Магазины сети — ДомМаркет</title>
+  <meta name="description" content="47 магазинов сети ДомМаркет в 23 регионах России: адреса, телефоны, режим работы.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/accessible.css" id="theme-accessible-css" disabled>
+</head>
+<body data-page="stores">
+  <header id="site-header" class="site-header"></header>
+  <nav class="breadcrumbs"><a href="index.html">Главная</a><span>/</span>Магазины</nav>
+
+  <main class="container" style="padding: 30px 20px 50px;">
+    <h1>Магазины сети</h1>
+    <p style="margin-bottom:30px;color:var(--color-text-muted);">Найдите ближайший магазин ДомМаркет. Можно оформить заказ онлайн и забрать в день покупки.</p>
+
+    <div style="margin-bottom:24px;">
+      <label for="city-filter" style="display:block;margin-bottom:6px;font-weight:500;">Город:</label>
+      <select id="city-filter" style="padding:9px 12px;border:1px solid var(--color-border);border-radius:6px;min-width:220px;">
+        <option value="">Все города</option>
+      </select>
+    </div>
+
+    <div class="stores-grid" id="stores-grid"></div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sel = document.getElementById('city-filter');
+      const cities = [...new Set(SITE_DATA.stores.map(s => s.city))];
+      sel.innerHTML += cities.map(c => `<option value="${c}">${c}</option>`).join('');
+      sel.addEventListener('change', renderStores);
+      renderStores();
+    });
+    function renderStores () {
+      const filter = document.getElementById('city-filter').value;
+      const list = filter ? SITE_DATA.stores.filter(s => s.city === filter) : SITE_DATA.stores;
+      document.getElementById('stores-grid').innerHTML = list.map(s => `
+        <div class="store-card">
+          <h3>${s.city}</h3>
+          <dl>
+            <dt>Адрес</dt><dd>${s.address}</dd>
+            <dt>Телефон</dt><dd><a href="tel:${s.phone.replace(/\D/g,'')}">${s.phone}</a></dd>
+            <dt>Режим работы</dt><dd>${s.hours}</dd>
+            ${s.metro && s.metro !== '—' ? `<dt>Метро</dt><dd>${s.metro}</dd>` : ''}
+          </dl>
+        </div>
+      `).join('');
+    }
+  </script>
+</body>
+</html>

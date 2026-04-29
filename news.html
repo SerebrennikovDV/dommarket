@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Новости и акции — ДомМаркет</title>
+  <meta name="description" content="Новости сети магазинов ДомМаркет: акции, открытия, изменения сервиса, новинки каталога.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/accessible.css" id="theme-accessible-css" disabled>
+</head>
+<body data-page="news">
+  <header id="site-header" class="site-header"></header>
+  <nav class="breadcrumbs"><a href="index.html">Главная</a><span>/</span>Новости</nav>
+
+  <main class="container" style="padding: 30px 20px 50px;">
+    <h1>Новости и акции</h1>
+    <p style="margin-bottom:30px;color:var(--color-text-muted);">Свежие предложения, открытия новых магазинов, изменения сервиса. Обновляется еженедельно.</p>
+
+    <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;">
+      <button class="btn btn--ghost btn--sm news-tab active" data-filter="all">Все</button>
+      <button class="btn btn--ghost btn--sm news-tab" data-filter="2025-12">Декабрь 2025</button>
+      <button class="btn btn--ghost btn--sm news-tab" data-filter="2025-11">Ноябрь 2025</button>
+    </div>
+
+    <div id="news-grid"></div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let _filter = 'all';
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.news-tab').forEach(b => {
+        b.addEventListener('click', () => {
+          document.querySelectorAll('.news-tab').forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+          _filter = b.dataset.filter;
+          renderNews();
+        });
+      });
+      renderNews();
+      // прокрутка к якорю
+      if (location.hash) {
+        const el = document.querySelector(location.hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+    function renderNews () {
+      const list = SITE_DATA.news.filter(n =>
+        _filter === 'all' || n.date.startsWith(_filter)
+      );
+      const grid = document.getElementById('news-grid');
+      grid.innerHTML = list.length ? list.map(n => `
+        <article id="news-${n.id}" class="news-card" style="margin-bottom:20px;">
+          <div class="news-card__date">${formatDate(n.date)}</div>
+          <h2 class="news-card__title">${n.title}</h2>
+          <p>${n.content}</p>
+        </article>
+      `).join('') : '<div class="alert alert--info">В выбранный период новостей нет.</div>';
+    }
+  </script>
+  <style>
+    .news-tab.active { background: var(--color-primary) !important; color: #fff !important; }
+  </style>
+</body>
+</html>

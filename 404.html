@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Страница не найдена — ДомМаркет</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/accessible.css" id="theme-accessible-css" disabled>
+  <script>
+    // Перенаправление: для GitHub Pages SPA-style — обработка несуществующих путей
+    (function () {
+      const path = location.pathname;
+      // если попали сюда не как /404.html — попробовать вернуть пользователя на главную
+      // в редких случаях, но в основном просто отображаем страницу
+    })();
+  </script>
+</head>
+<body data-page="404">
+  <header id="site-header" class="site-header"></header>
+
+  <main class="error-page">
+    <div class="error-page__code">404</div>
+    <h1>Страница не найдена</h1>
+    <p class="error-page__msg">К сожалению, такой страницы у нас нет. Возможно, она была перемещена или вы перешли по устаревшей ссылке.</p>
+
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;">
+      <a href="index.html" class="btn">На главную</a>
+      <a href="catalog.html" class="btn btn--ghost">В каталог</a>
+      <a href="contacts.html" class="btn btn--ghost">Связаться с нами</a>
+    </div>
+
+    <div class="container" style="max-width:600px;">
+      <h2>Возможно, вас заинтересует</h2>
+      <form class="site-search" onsubmit="goSearch(event)" style="max-width:none;margin-bottom:30px;">
+        <input type="search" name="q" placeholder="Введите запрос — например, «сковорода»">
+        <button type="submit">Найти</button>
+      </form>
+
+      <div class="categories" id="popular-cats" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));"></div>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('popular-cats').innerHTML = SITE_DATA.categories.slice(0, 4).map(c => `
+        <a href="catalog.html?cat=${c.id}" class="category-card">
+          <div class="category-card__icon">${c.icon}</div>
+          <div class="category-card__title">${c.name}</div>
+        </a>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

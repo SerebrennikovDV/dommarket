@@ -1,0 +1,173 @@
+/* ============================================
+   Версия для слабовидящих
+   Соответствует ГОСТ Р 52872-2012
+   - чёрный фон + жёлтый текст
+   - крупный шрифт (минимум 18px, заголовки от 24px)
+   - повышенный контраст
+   - подчёркнутые ссылки
+   - убраны фоновые изображения
+   ============================================ */
+
+body.theme-accessible {
+  --color-bg: #000000;
+  --color-surface: #1a1a1a;
+  --color-primary: #ffd400;
+  --color-primary-dark: #ffe34d;
+  --color-accent: #ffd400;
+  --color-accent-dark: #ffea7a;
+  --color-text: #ffd400;
+  --color-text-muted: #ffe34d;
+  --color-border: #ffd400;
+  --color-warm: #1a1a1a;
+  --font-base: 'Arial', 'Verdana', sans-serif;
+  --font-heading: 'Arial', 'Verdana', sans-serif;
+  --font-size-base: 20px;
+  --line-height: 1.8;
+  --shadow-sm: none;
+  --shadow-md: none;
+
+  background: #000 !important;
+  color: #ffd400 !important;
+}
+
+body.theme-accessible * {
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+body.theme-accessible h1 { font-size: 2.6rem !important; }
+body.theme-accessible h2 { font-size: 2.0rem !important; }
+body.theme-accessible h3 { font-size: 1.6rem !important; }
+body.theme-accessible h4 { font-size: 1.3rem !important; }
+
+body.theme-accessible h1,
+body.theme-accessible h2,
+body.theme-accessible h3,
+body.theme-accessible h4 {
+  color: #ffd400 !important;
+  font-family: Arial, Verdana, sans-serif !important;
+  font-weight: 700 !important;
+}
+
+body.theme-accessible a {
+  color: #ffd400 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+body.theme-accessible a:hover,
+body.theme-accessible a:focus {
+  color: #ffffff !important;
+  background: #444 !important;
+}
+
+body.theme-accessible img {
+  filter: grayscale(50%) contrast(1.2);
+}
+
+body.theme-accessible .site-header,
+body.theme-accessible .site-footer,
+body.theme-accessible .main-nav,
+body.theme-accessible .product-card,
+body.theme-accessible .news-card,
+body.theme-accessible .category-card,
+body.theme-accessible .store-card,
+body.theme-accessible .form-block,
+body.theme-accessible .filter-panel,
+body.theme-accessible .messages-layout,
+body.theme-accessible .messages-list,
+body.theme-accessible .sitemap__group,
+body.theme-accessible .user-table {
+  background: #000 !important;
+  border: 2px solid #ffd400 !important;
+  color: #ffd400 !important;
+}
+
+body.theme-accessible .main-nav {
+  background: #000 !important;
+  border-top: 2px solid #ffd400;
+  border-bottom: 2px solid #ffd400;
+}
+body.theme-accessible .main-nav a {
+  color: #ffd400 !important;
+  border: 1px solid transparent;
+}
+body.theme-accessible .main-nav a:hover,
+body.theme-accessible .main-nav a.active {
+  background: #ffd400 !important;
+  color: #000 !important;
+  text-decoration: none !important;
+}
+
+body.theme-accessible .hero {
+  background: #000 !important;
+  border-bottom: 4px solid #ffd400 !important;
+}
+
+body.theme-accessible .btn,
+body.theme-accessible .site-search button {
+  background: #ffd400 !important;
+  color: #000 !important;
+  border: 2px solid #ffd400 !important;
+  font-weight: 700 !important;
+}
+body.theme-accessible .btn:hover,
+body.theme-accessible .site-search button:hover {
+  background: #000 !important;
+  color: #ffd400 !important;
+}
+
+body.theme-accessible .btn--ghost {
+  background: transparent !important;
+  color: #ffd400 !important;
+}
+
+body.theme-accessible input,
+body.theme-accessible textarea,
+body.theme-accessible select {
+  background: #000 !important;
+  color: #ffd400 !important;
+  border: 2px solid #ffd400 !important;
+  font-size: 18px !important;
+}
+body.theme-accessible input:focus,
+body.theme-accessible textarea:focus {
+  outline: 3px solid #fff !important;
+}
+
+body.theme-accessible .product-card__price,
+body.theme-accessible .product-card__title,
+body.theme-accessible .news-card__title,
+body.theme-accessible .category-card__title {
+  color: #ffd400 !important;
+}
+
+body.theme-accessible .product-card__image {
+  background: #1a1a1a !important;
+  filter: invert(1);
+}
+
+body.theme-accessible .role-badge {
+  background: #ffd400 !important;
+  color: #000 !important;
+  border: 1px solid #ffd400;
+}
+
+body.theme-accessible .alert--success { background: #003300 !important; color: #ffd400 !important; border: 2px solid #ffd400 !important; }
+body.theme-accessible .alert--error { background: #330000 !important; color: #ffd400 !important; border: 2px solid #ffd400 !important; }
+body.theme-accessible .alert--info { background: #1a1a00 !important; color: #ffd400 !important; border: 2px solid #ffd400 !important; }
+
+body.theme-accessible .message-bubble--in,
+body.theme-accessible .message-bubble--out {
+  background: #1a1a1a !important;
+  color: #ffd400 !important;
+  border: 2px solid #ffd400;
+}
+
+body.theme-accessible .breadcrumbs,
+body.theme-accessible .breadcrumbs a {
+  color: #ffd400 !important;
+}
+
+body.theme-accessible .footer-bottom {
+  border-top: 2px solid #ffd400;
+}

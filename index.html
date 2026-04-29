@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ДомМаркет — Сеть магазинов товаров для дома</title>
+  <meta name="description" content="ДомМаркет — федеральная сеть магазинов товаров для дома. Посуда, текстиль, мебель, инструменты. Более 12 000 товаров в каталоге.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/accessible.css" id="theme-accessible-css" disabled>
+</head>
+<body data-page="index">
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <section class="hero">
+      <h1>Уютный дом начинается здесь</h1>
+      <p>Более 12 000 товаров для кухни, текстиля, декора, ремонта и сада в 47 магазинах России. Доставка по Москве — за один день.</p>
+      <a href="catalog.html" class="btn">Перейти в каталог</a>
+      <a href="news.html" class="btn btn--ghost" style="margin-left:10px;">Акции и скидки</a>
+    </section>
+
+    <section class="section">
+      <div class="section__head">
+        <h2>Категории</h2>
+        <p>Найдите всё, что нужно для дома</p>
+      </div>
+      <div class="container">
+        <div class="categories" id="home-categories"></div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="section__head">
+        <h2>Хиты продаж</h2>
+        <p>То, что наши покупатели выбирают чаще всего</p>
+      </div>
+      <div class="container">
+        <div class="products" id="home-bestsellers"></div>
+        <div class="text-center mt-20">
+          <a href="catalog.html" class="btn">Все товары →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section__head">
+        <h2>Новости и акции</h2>
+        <p>Свежие предложения и события сети</p>
+      </div>
+      <div class="container">
+        <div class="news-list" id="home-news"></div>
+        <div class="text-center mt-20">
+          <a href="news.html" class="btn btn--ghost">Все новости →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--alt">
+      <div class="container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;text-align:center;">
+        <div>
+          <div style="font-size:2.4rem;font-weight:700;color:var(--color-primary-dark);">47</div>
+          <div style="color:var(--color-text-muted);">магазинов в РФ</div>
+        </div>
+        <div>
+          <div style="font-size:2.4rem;font-weight:700;color:var(--color-primary-dark);">12 000+</div>
+          <div style="color:var(--color-text-muted);">товаров в каталоге</div>
+        </div>
+        <div>
+          <div style="font-size:2.4rem;font-weight:700;color:var(--color-primary-dark);">11 лет</div>
+          <div style="color:var(--color-text-muted);">опыта работы</div>
+        </div>
+        <div>
+          <div style="font-size:2.4rem;font-weight:700;color:var(--color-primary-dark);">350 000</div>
+          <div style="color:var(--color-text-muted);">довольных клиентов</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Категории (первые 8)
+      document.getElementById('home-categories').innerHTML = SITE_DATA.categories.map(c => `
+        <a href="catalog.html?cat=${c.id}" class="category-card">
+          <div class="category-card__icon">${c.icon}</div>
+          <div class="category-card__title">${c.name}</div>
+          <div class="category-card__count">${c.count} товаров</div>
+        </a>
+      `).join('');
+
+      // Хиты — товары с badge "Хит" + первые
+      const hits = SITE_DATA.products.filter(p => p.badge && p.badge.includes('Хит')).slice(0, 4);
+      while (hits.length < 4) {
+        const candidate = SITE_DATA.products[hits.length];
+        if (candidate && !hits.includes(candidate)) hits.push(candidate);
+      }
+      document.getElementById('home-bestsellers').innerHTML = hits.map(p => `
+        <article class="product-card">
+          <div class="product-card__image">${p.image}</div>
+          <div class="product-card__body">
+            ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ''}
+            <h3 class="product-card__title">${p.title}</h3>
+            <div class="product-card__price">${formatPrice(p.price)}</div>
+            <a href="catalog.html?cat=${p.cat}" class="btn btn--block">Подробнее</a>
+          </div>
+        </article>
+      `).join('');
+
+      // Новости (3 последних)
+      document.getElementById('home-news').innerHTML = SITE_DATA.news.slice(0, 3).map(n => `
+        <article class="news-card">
+          <div class="news-card__date">${formatDate(n.date)}</div>
+          <h3 class="news-card__title">${n.title}</h3>
+          <p class="news-card__excerpt">${n.excerpt}</p>
+          <a href="news.html#news-${n.id}" class="btn btn--sm btn--ghost">Читать →</a>
+        </article>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

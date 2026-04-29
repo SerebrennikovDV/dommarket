@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Личный кабинет — ДомМаркет</title>
+  <meta name="description" content="Личный кабинет ДомМаркет: вход, регистрация, обмен сообщениями с менеджерами, управление заказами.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/accessible.css" id="theme-accessible-css" disabled>
+</head>
+<body data-page="account">
+  <header id="site-header" class="site-header"></header>
+  <nav class="breadcrumbs"><a href="index.html">Главная</a><span>/</span>Личный кабинет</nav>
+
+  <main class="container" style="padding: 30px 20px 50px;">
+
+    <!-- ===== Не авторизован ===== -->
+    <div id="auth-block">
+      <h1 style="text-align:center;">Личный кабинет</h1>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:24px;">
+        <button class="btn auth-tab active" data-tab="login">Вход</button>
+        <button class="btn btn--ghost auth-tab" data-tab="register">Регистрация</button>
+      </div>
+
+      <div id="auth-msg"></div>
+
+      <!-- Вход -->
+      <form class="form-block" id="login-form" onsubmit="loginHandler(event)">
+        <h2>Вход в личный кабинет</h2>
+        <div class="form-row">
+          <label for="login-login">Логин</label>
+          <input id="login-login" name="login" required autocomplete="username">
+        </div>
+        <div class="form-row">
+          <label for="login-password">Пароль</label>
+          <input id="login-password" name="password" type="password" required autocomplete="current-password">
+        </div>
+        <button class="btn btn--block" type="submit">Войти</button>
+        <p style="margin-top:14px;font-size:13px;color:var(--color-text-muted);text-align:center;">
+          Демо-доступы:<br>
+          admin / Admin123! · manager / Manager123! · user / User123!
+        </p>
+      </form>
+
+      <!-- Регистрация -->
+      <form class="form-block hidden" id="register-form" onsubmit="registerHandler(event)">
+        <h2>Регистрация нового клиента</h2>
+        <div class="form-row">
+          <label for="reg-login">Логин *</label>
+          <input id="reg-login" name="login" required minlength="3" autocomplete="username">
+        </div>
+        <div class="form-row">
+          <label for="reg-name">Имя и фамилия *</label>
+          <input id="reg-name" name="name" required>
+        </div>
+        <div class="form-row">
+          <label for="reg-email">Email *</label>
+          <input id="reg-email" name="email" type="email" required>
+        </div>
+        <div class="form-row">
+          <label for="reg-phone">Телефон</label>
+          <input id="reg-phone" name="phone" type="tel" placeholder="+7 (___) ___-__-__">
+        </div>
+        <div class="form-row">
+          <label for="reg-password">Пароль *</label>
+          <input id="reg-password" name="password" type="password" required minlength="6" autocomplete="new-password">
+        </div>
+        <div class="form-row">
+          <label for="reg-password2">Повторите пароль *</label>
+          <input id="reg-password2" name="password_repeat" type="password" required minlength="6" autocomplete="new-password">
+        </div>
+        <button class="btn btn--block" type="submit">Зарегистрироваться</button>
+      </form>
+    </div>
+
+    <!-- ===== Авторизован ===== -->
+    <div id="profile-block" class="hidden">
+      <h1 id="welcome-line"></h1>
+      <p id="role-line" style="color:var(--color-text-muted);margin-bottom:30px;"></p>
+
+      <!-- Разделы кабинета -->
+      <div style="display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;" id="cabinet-tabs">
+        <button class="btn cabinet-tab active" data-tab="profile">Профиль</button>
+        <button class="btn btn--ghost cabinet-tab" data-tab="messages">Сообщения</button>
+        <button class="btn btn--ghost cabinet-tab admin-only hidden" data-tab="users">Пользователи</button>
+      </div>
+
+      <!-- Профиль -->
+      <section class="cabinet-section" data-section="profile">
+        <div class="store-card">
+          <h3>Профиль</h3>
+          <dl id="profile-info"></dl>
+        </div>
+      </section>
+
+      <!-- Сообщения для клиента -->
+      <section class="cabinet-section hidden" data-section="messages">
+        <div id="user-chat" class="hidden">
+          <h2>Чат с менеджером</h2>
+          <div class="messages-thread" style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:6px;">
+            <div class="messages-thread__list" id="chat-thread" style="min-height:300px;"></div>
+            <form class="messages-compose" onsubmit="userSendHandler(event)">
+              <input type="text" name="text" placeholder="Введите сообщение…" required>
+              <button class="btn" type="submit">Отправить</button>
+            </form>
+          </div>
+        </div>
+        <div id="admin-chat" class="hidden">
+          <h2>Сообщения клиентов</h2>
+          <div class="messages-layout">
+            <aside class="messages-list" id="admin-chat-list"></aside>
+            <div class="messages-thread" id="admin-chat-thread"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Управление пользователями (admin / manager) -->
+      <section class="cabinet-section hidden" data-section="users">
+        <h2>Управление пользователями</h2>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:30px;" class="admin-grid">
+          <form class="form-block" id="admin-create-form" onsubmit="adminCreateUserHandler(event)" style="margin:0;">
+            <h3 style="text-align:left;margin-bottom:14px;">Создать пользователя</h3>
+            <div id="admin-create-msg"></div>
+            <div class="form-row">
+              <label>Логин *</label>
+              <input name="login" required>
+            </div>
+            <div class="form-row">
+              <label>Имя *</label>
+              <input name="name" required>
+            </div>
+            <div class="form-row">
+              <label>Email *</label>
+              <input name="email" type="email" required>
+            </div>
+            <div class="form-row">
+              <label>Телефон</label>
+              <input name="phone" type="tel">
+            </div>
+            <div class="form-row">
+              <label>Пароль *</label>
+              <input name="password" type="password" required minlength="6">
+            </div>
+            <div class="form-row">
+              <label>Роль *</label>
+              <select name="role" required>
+                <option value="user">Клиент</option>
+                <option value="manager">Менеджер</option>
+                <option value="admin">Администратор</option>
+              </select>
+            </div>
+            <button class="btn btn--block" type="submit">Создать</button>
+          </form>
+
+          <div>
+            <h3 style="margin-top:0;">Сценарий создания учётной записи</h3>
+            <p style="color:var(--color-text-muted);font-size:14px;line-height:1.6;">
+              <strong>Сценарий 1 — клиент сам себя регистрирует:</strong> на странице
+              «Личный кабинет» выбирает вкладку «Регистрация», заполняет логин, имя, email,
+              телефон, пароль. После сохранения автоматически авторизуется как пользователь
+              с ролью «Клиент».
+            </p>
+            <p style="color:var(--color-text-muted);font-size:14px;line-height:1.6;">
+              <strong>Сценарий 2 — сотрудник создаёт пользователя:</strong> администратор
+              или менеджер заходит в раздел «Пользователи», заполняет форму слева и выбирает
+              роль (клиент / менеджер / администратор). Пользователь получает учётные
+              данные и может войти под выданным логином.
+            </p>
+          </div>
+        </div>
+
+        <h3>Список пользователей</h3>
+        <div style="overflow-x:auto;">
+          <table class="user-table">
+            <thead>
+              <tr><th>ID</th><th>Логин</th><th>Имя</th><th>Email</th><th>Телефон</th><th>Роль</th><th>Регистрация</th><th></th></tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/messages.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Переключатели вкладок входа/регистрации
+      document.querySelectorAll('.auth-tab').forEach(b => {
+        b.addEventListener('click', () => {
+          document.querySelectorAll('.auth-tab').forEach(x => {
+            x.classList.remove('active');
+            x.classList.add('btn--ghost');
+            x.classList.remove('btn');
+          });
+          b.classList.add('active', 'btn');
+          b.classList.remove('btn--ghost');
+          document.getElementById('login-form').classList.toggle('hidden', b.dataset.tab !== 'login');
+          document.getElementById('register-form').classList.toggle('hidden', b.dataset.tab !== 'register');
+          document.getElementById('auth-msg').textContent = '';
+          document.getElementById('auth-msg').className = '';
+        });
+      });
+
+      const user = getCurrentUser();
+      if (user) showProfile(user); else showAuth();
+    });
+
+    function showAuth () {
+      document.getElementById('auth-block').classList.remove('hidden');
+      document.getElementById('profile-block').classList.add('hidden');
+    }
+    function showProfile (user) {
+      document.getElementById('auth-block').classList.add('hidden');
+      document.getElementById('profile-block').classList.remove('hidden');
+
+      const roleLabels = { admin: 'Администратор', manager: 'Менеджер', user: 'Клиент' };
+      document.getElementById('welcome-line').textContent = `Здравствуйте, ${user.name}!`;
+      document.getElementById('role-line').textContent = `Ваша роль: ${roleLabels[user.role] || user.role}. Зарегистрированы: ${user.registered}`;
+      document.getElementById('profile-info').innerHTML = `
+        <dt>Логин</dt><dd>${user.login}</dd>
+        <dt>Email</dt><dd>${user.email}</dd>
+        <dt>Телефон</dt><dd>${user.phone || '—'}</dd>
+        <dt>Роль</dt><dd><span class="role-badge role-badge--${user.role}">${roleLabels[user.role]}</span></dd>
+      `;
+
+      // Админу/менеджеру — открыть раздел "Пользователи"
+      if (user.role === 'admin' || user.role === 'manager') {
+        document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+      }
+
+      // Чат
+      if (user.role === 'admin' || user.role === 'manager') {
+        renderAdminChats();
+      } else {
+        renderUserChat();
+      }
+
+      // Вкладки кабинета
+      document.querySelectorAll('.cabinet-tab').forEach(b => {
+        b.addEventListener('click', () => {
+          document.querySelectorAll('.cabinet-tab').forEach(x => {
+            x.classList.remove('active', 'btn');
+            x.classList.add('btn--ghost');
+          });
+          b.classList.add('active', 'btn');
+          b.classList.remove('btn--ghost');
+          document.querySelectorAll('.cabinet-section').forEach(s => s.classList.add('hidden'));
+          const sect = document.querySelector(`[data-section="${b.dataset.tab}"]`);
+          sect.classList.remove('hidden');
+
+          if (b.dataset.tab === 'messages') {
+            if (user.role === 'admin' || user.role === 'manager') {
+              document.getElementById('admin-chat').classList.remove('hidden');
+              document.getElementById('user-chat').classList.add('hidden');
+              renderAdminChats();
+            } else {
+              document.getElementById('user-chat').classList.remove('hidden');
+              document.getElementById('admin-chat').classList.add('hidden');
+              renderUserChat();
+            }
+          }
+          if (b.dataset.tab === 'users') renderUsersTable();
+        });
+      });
+    }
+  </script>
+</body>
+</html>
